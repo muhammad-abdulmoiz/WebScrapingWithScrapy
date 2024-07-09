@@ -12,3 +12,8 @@ class QuoteItem(scrapy.Item):
     author = scrapy.Field()
     tags = scrapy.Field()
 
+
+class AuthorItem(scrapy.Item):
+    name = scrapy.Field()
+    birthdate = scrapy.Field()
+    bio = scrapy.Field()
