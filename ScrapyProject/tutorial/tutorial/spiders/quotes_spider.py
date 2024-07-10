@@ -1,5 +1,6 @@
 import scrapy
 from tutorial.items import QuoteItem
+from scrapy.loader import ItemLoader
 
 
 class QuotesSpider(scrapy.Spider):
@@ -11,8 +12,8 @@ class QuotesSpider(scrapy.Spider):
 
     def parse(self, response, **kwargs):
         for quote in response.css("div.quote"):
-            item = QuoteItem()
-            item["text"] = quote.css("span.text::text").get()
-            item["author"] = quote.css("small.author::text").get()
-            item["tags"] = quote.css("div.tags a.tag::text").getall()
-            yield item
+            loader = ItemLoader(item=QuoteItem(), selector=quote)
+            loader.add_css("text", "span.text::text")
+            loader.add_css("author", "small.author::text")
+            loader.add_css("tags", "div.tags a.tag::text")
+            yield loader.load_item()

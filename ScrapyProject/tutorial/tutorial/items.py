@@ -1,16 +1,20 @@
 import scrapy
-
-
-class TutorialItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+from itemloaders.processors import TakeFirst, MapCompose, Join
 
 
 class QuoteItem(scrapy.Item):
-    text = scrapy.Field()
-    author = scrapy.Field()
-    tags = scrapy.Field()
+    text = scrapy.Field(
+        input_processor=MapCompose(str.strip),
+        output_processor=TakeFirst()
+    )
+    author = scrapy.Field(
+        input_processor=MapCompose(str.strip),
+        output_processor=TakeFirst()
+    )
+    tags = scrapy.Field(
+        input_processor=MapCompose(str.strip),
+        output_processor=Join(", ")
+    )
 
 
 class AuthorItem(scrapy.Item):

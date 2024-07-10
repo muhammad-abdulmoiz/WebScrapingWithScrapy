@@ -1,10 +1,11 @@
 import scrapy
+from scrapy.loader import ItemLoader
 from tutorial.items import AuthorItem
+from tutorial.loaders import AuthorLoader
 
 
 class AuthorSpider(scrapy.Spider):
     name = "author"
-
     start_urls = ["https://quotes.toscrape.com/"]
 
     def parse(self, response, **kwargs):
@@ -15,13 +16,9 @@ class AuthorSpider(scrapy.Spider):
         yield from response.follow_all(pagination_links, self.parse)
 
     @staticmethod
-    def parse_author(self, response):
-        def extract_with_css(query):
-            return response.css(query).get(default="").strip()
-
-        item = AuthorItem()
-        item['name'] = extract_with_css('h3.author-title::text')
-        item['birthdate'] = extract_with_css('.author-born-date::text')
-        item['bio'] = extract_with_css('.author-description::text')
-
-        yield item
+    def parse_author(response):
+        loader = AuthorLoader(item=AuthorItem(), response=response)
+        loader.add_css("name", "h3.author-title::text")
+        loader.add_css("birthdate", ".author-born-date::text")
+        loader.add_css("bio", ".author-description::text")
+        yield loader.load_item()
