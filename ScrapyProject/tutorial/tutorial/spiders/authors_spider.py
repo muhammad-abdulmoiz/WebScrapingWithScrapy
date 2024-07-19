@@ -1,5 +1,4 @@
 import scrapy
-from scrapy.loader import ItemLoader
 from tutorial.items import AuthorItem
 from tutorial.loaders import AuthorLoader
 
